@@ -1,7 +1,7 @@
 {
   "name": "sharpie",
   "version": "0.0.1",
-  "description": "Simple connect middleware for resizing images using sharp",
+  "description": "Simple express middleware for resizing images using sharp",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
