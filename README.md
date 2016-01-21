@@ -31,7 +31,8 @@ that can be given as parameters or as defaults when initializing
 the middleware:
 
 * format  
-  png, jpeg, webp, raw
+  jpeg, png, webp, raw  
+  default jpeg
 * rs  
   w:452,h=123,min  
   w:452,h=123,max
@@ -43,6 +44,8 @@ the middleware:
   boolean
 
 There is optional support for svg rendering using librsvg.
+
+Content-Type is set by sharpie middleware in the HTTP response header.
 
 This module does not offer any kind of cache, and will stay as simple as
 possible.
