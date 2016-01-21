@@ -5,6 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "main": "lib/sharpie.js",
   "author": "Jérémy Lal <kapouer@melix.org>",
   "license": "MIT",
   "dependencies": {
