@@ -33,7 +33,7 @@ the middleware:
 * format  
   png, jpeg, webp, raw
 * rs  
-  w:452,h=123,min
+  w:452,h=123,min  
   w:452,h=123,max
 * bg  
   the background color
