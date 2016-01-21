@@ -3,12 +3,12 @@ sharpie
 
 A simple connect middleware that fetch and resize images using pipes.
 
-It supports a limited subset of `sharp` options,
+It supports a limited subset of [sharp options](http://sharp.dimens.io)
 that can be given as query parameters or as defaults when initializing
 the middleware:
 
 * format  
-  png, jpeg, ... all pipe-supported sharp formats
+  png, jpeg, webp, raw
 * rs  
   w:452,h=123,min
   w:452,h=123,max
