@@ -32,12 +32,13 @@ the middleware:
 
 * format  
   jpeg, png, webp, raw  
-  default jpeg
+  defaults to format of the original image, or jpeg
 * rs  
   w:452,h=123,min  
   w:452,h=123,max
 * bg  
-  the background color
+  the background color  
+  defaults to no background color
 * crop  
   center, north, northeast, ...
 * flatten  
