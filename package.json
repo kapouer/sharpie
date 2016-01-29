@@ -8,6 +8,20 @@
   "main": "lib/sharpie.js",
   "author": "Jérémy Lal <kapouer@melix.org>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kapouer/sharpie.git"
+  },
+  "keywords": [
+    "resize",
+    "image",
+    "connect",
+    "middleware",
+    "vips"
+  ],
+  "bugs": {
+    "url": "https://github.com/kapouer/sharpie/issues"
+  },
   "dependencies": {
     "debug": "^2.2.0",
     "express": "^4.13.3",
