@@ -35,7 +35,8 @@ the middleware:
   defaults to format of the original image, or jpeg
 * rs  
   w:452,h=123,min  
-  w:452,h=123,max
+  w:452,h=123,max  
+  w:452,enlarge
 * bg  
   the background color  
   defaults to no background color
