@@ -9,3 +9,8 @@ Version 1.2.0
 =============
 
 url are resolved against current request if they have no hostname.
+
+Version 1.3.0
+=============
+
+rs supports 'enlarge' parameter.
