@@ -14,3 +14,11 @@ Version 1.3.0
 =============
 
 rs supports 'enlarge' parameter.
+
+Version 1.4.0
+=============
+
+Drop svg support and librsvg optional dep, replace by simply passing svg files
+through.
+Bump sharp to 0.15.1
+

@@ -45,7 +45,8 @@ the middleware:
 * flatten  
   boolean
 
-There is optional support for svg rendering using librsvg.
+Since version 1.4 svg support has been dropped and replaced by a passing svg
+through unmodified.
 
 Content-Type is set by sharpie middleware in the HTTP response header.
 
