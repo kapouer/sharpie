@@ -15,7 +15,8 @@ var sharpie = require('sharpie')({
 	format: 'jpeg',
 	bg: 'white',
 	crop: 'center',
-	flatten: true
+	flatten: true,
+	hostnames: false
 });
 
 // will get the url through req.params[opts.param] – e.g /param/foo.jpg
@@ -49,6 +50,13 @@ Since version 1.4 svg support has been dropped and replaced by passing svg
 through unmodified.
 
 Content-Type is set by sharpie middleware in the HTTP response header.
+
+Since version 2.0 it is possible to pass a `hostnames` option to be able to whitelist
+hostnames that sharpie can proxy. This option can be
+- `function(hostname) -> boolean`
+- `hostnames[hostname] -> boolean`
+- an array of whitelisted hostnames
+- `true` allowing all hostnames, or `false` rejecting all hostnames except the Host.
 
 This module does not offer any kind of cache, and will stay as simple as
 possible.
