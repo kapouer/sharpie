@@ -16,7 +16,7 @@ var sharpie = require('sharpie')({
 	bg: 'white',
 	crop: 'center',
 	flatten: true,
-	domains: false
+	hostnames: false
 });
 
 // will get the url through req.params[opts.param] – e.g /param/foo.jpg
@@ -51,11 +51,12 @@ through unmodified.
 
 Content-Type is set by sharpie middleware in the HTTP response header.
 
-Since version 2.0 it is possible to pass a `domains` option to be able to whitelist
+Since version 2.0 it is possible to pass a `hostnames` option to be able to whitelist
 hostnames that sharpie can proxy. This option can be
 - `function(hostname) -> boolean`
-- `domains[hostname] -> boolean`
-- `true` allowing all domains, or `false` rejecting all domains except the Host.
+- `hostnames[hostname] -> boolean`
+- an array of whitelisted hostnames
+- `true` allowing all hostnames, or `false` rejecting all hostnames except the Host.
 
 This module does not offer any kind of cache, and will stay as simple as
 possible.
