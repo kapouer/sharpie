@@ -18,7 +18,7 @@ var sharpie = require('sharpie')({
 	flatten: true
 });
 
-// will get the url through req.param[opts.param]
+// will get the url through req.params[opts.param]
 app.get('/param:url(*)', sharpie);
 // will get the url through req.query[opts.param]
 app.get('/query', sharpie);
