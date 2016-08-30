@@ -1,6 +1,6 @@
 {
   "name": "sharpie",
-  "version": "1.4.3",
+  "version": "2.0.0",
   "description": "A simple express middleware for resizing images using sharp and pipes",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
