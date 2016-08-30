@@ -1,7 +1,7 @@
 sharpie
 =======
 
-A simple express middleware that fetch and resize images using pipes.
+A simple express middleware for resizing images using sharp and pipes
 
 Usage
 -----
