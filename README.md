@@ -56,7 +56,7 @@ hostnames that sharpie can proxy. This option can be
 - `function(hostname) -> boolean`
 - `hostnames[hostname] -> boolean`
 - an array of whitelisted hostnames
-- `true` allowing all hostnames, or `false` rejecting all hostnames except the Host.
+- `true` allowing all hostnames, or `false` rejecting all hostnames except current Host.
 
 Since version 2.0 responses with statusCode >= 400
 [pass control to next middleware](https://github.com/kapouer/sharpie/pull/4):
