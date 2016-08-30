@@ -58,6 +58,12 @@ hostnames that sharpie can proxy. This option can be
 - an array of whitelisted hostnames
 - `true` allowing all hostnames, or `false` rejecting all hostnames except the Host.
 
+Since version 2.0 responses with statusCode >= 400
+[pass control to next middleware](https://github.com/kapouer/sharpie/pull/4):
+- next() when 404
+- or next(err) with err.status = res.statusCode 
+
+
 This module does not offer any kind of cache, and will stay as simple as
 possible.
 
