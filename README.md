@@ -45,7 +45,7 @@ the middleware:
 * flatten  
   boolean
 
-Since version 1.4 svg support has been dropped and replaced by a passing svg
+Since version 1.4 svg support has been dropped and replaced by passing svg
 through unmodified.
 
 Content-Type is set by sharpie middleware in the HTTP response header.
