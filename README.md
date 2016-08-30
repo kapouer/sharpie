@@ -1,7 +1,7 @@
 sharpie
 =======
 
-A simple express middleware that fetch and resize images using pipes.
+A simple express middleware for resizing images using sharp and pipes
 
 Usage
 -----
@@ -18,9 +18,9 @@ var sharpie = require('sharpie')({
 	flatten: true
 });
 
-// will get the url through req.param[opts.param]
-app.get('/param/:url', sharpie);
-// will get the url through req.query[opts.param]
+// will get the url through req.params[opts.param] – e.g /param/foo.jpg
+app.get('/param:url(*)', sharpie);
+// will get the url through req.query[opts.param] – e.g. /query?url=/foo.jpg
 app.get('/query', sharpie);
 
 app.listen();
