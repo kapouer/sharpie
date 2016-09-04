@@ -55,5 +55,30 @@ describe("Sharpie middleware", function suite() {
 
 	});
 
+	it("should not allow blacklisted domain", function(done) {
+		var app = express();
+		var server = app.listen();
+		var port = server.address().port;
+
+		app.get('/', sharpie({
+			hostnames: function(hostname) {
+				if (hostname == 'www.gravatar.com') return true;
+				else return false;
+			}
+		}));
+
+		http.get('http://localhost:' + port + '/?url=' + encodeURIComponent('http://www.gravatar.com/avatar/0.jpg')).on('response', function(res) {
+			should(res.statusCode).equal(200);
+			should(res.headers['content-type']).equal('image/jpeg');
+			http.get('http://localhost:' + port + '/?url=' + encodeURIComponent('https://avatars0.githubusercontent.com/u/0')).on('response', function(res) {
+				should(res.statusCode).equal(403);
+				server.close();
+				done();
+			});
+		});
+
+
+	});
+
 });
 
