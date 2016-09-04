@@ -8,7 +8,7 @@ var sharpie = require('../');
 
 describe("Sharpie middleware", function suite() {
 
-	it("should pass through an image with unsupported format", function(done) {
+	it("should pass through images with unsupported format", function(done) {
 		var app = express();
 		var server = app.listen();
 		var port = server.address().port;
@@ -25,8 +25,11 @@ describe("Sharpie middleware", function suite() {
 
 		http.get('http://localhost:' + port + '/images/image.ico').on('response', function(res) {
 			should(res.statusCode).equal(200);
-			server.close();
-			done();
+			http.get('http://localhost:' + port + '/images/image.svg').on('response', function(res) {
+				should(res.statusCode).equal(200);
+				server.close();
+				done();
+			});
 		});
 
 	});
@@ -76,8 +79,6 @@ describe("Sharpie middleware", function suite() {
 				done();
 			});
 		});
-
-
 	});
 
 });
