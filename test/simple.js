@@ -49,7 +49,7 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		http.get('http://localhost:' + port + '/images/image.jpg?rs=w:50').on('response', function(res) {
+		http.get('http://localhost:' + port + '/images/image.jpg?rs=w:50&q=75').on('response', function(res) {
 			should(res.statusCode).equal(200);
 			should(res.headers['content-type']).equal('image/jpeg');
 			server.close();
