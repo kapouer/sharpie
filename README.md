@@ -11,6 +11,7 @@ var express = require('express');
 var app = express();
 var sharpie = require('sharpie')({
 	param: 'url',
+	q: 90,
 	rs: "w:320,h:240,max",
 	format: 'jpeg',
 	bg: 'white',
@@ -34,6 +35,8 @@ the middleware:
 * format  
   jpeg, png, webp, raw  
   defaults to format of the original image, or jpeg
+* q  
+  quality, default 90
 * rs  
   w:452,h=123,min  
   w:452,h=123,max  
