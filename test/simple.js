@@ -51,9 +51,16 @@ describe("Sharpie middleware", function suite() {
 
 		http.get('http://localhost:' + port + '/images/image.jpg?rs=w:50&q=75').on('response', function(res) {
 			should(res.statusCode).equal(200);
+			var len = 0;
+			res.on('data', function(buf) {
+				len += buf.length;
+			});
+			res.on('end', function() {
+				should(len).equal(636);
+				server.close();
+				done();
+			});
 			should(res.headers['content-type']).equal('image/jpeg');
-			server.close();
-			done();
 		});
 
 	});
