@@ -48,6 +48,9 @@ the middleware:
   center, north, northeast, ...
 * flatten  
   boolean
+* style  
+  new in version 2.3  
+  appends a style tag with that content to the svg root
 
 Since version 1.4 svg support has been dropped and replaced by passing svg
 through unmodified.

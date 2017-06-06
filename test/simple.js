@@ -88,5 +88,37 @@ describe("Sharpie middleware", function suite() {
 		});
 	});
 
+	it("should append style tag to svg root element", function(done) {
+		var app = express();
+		var server = app.listen();
+		var port = server.address().port;
+
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		http.get('http://localhost:' + port + '/images/image.svg?style=*%7Bfill%3Ared%3B%7D').on('response', function(res) {
+			should(res.statusCode).equal(200);
+			var xml = "";
+			res.on('data', function(buf) {
+				xml += buf.toString();
+			});
+			res.on('end', function() {
+				should(xml).containEql(`<svg width="600" height="600" version="1.0"><style type="text/css"><![CDATA[
+*{fill:red;}
+]]</style>`);
+				server.close();
+				done();
+			});
+		});
+
+	});
+
 });
 
