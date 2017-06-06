@@ -24,8 +24,8 @@
   },
   "dependencies": {
     "debug": "^2.4.4",
+    "got": "^7.0.0",
     "media-typer": "^0.3.0",
-    "request": "^2.79.0",
     "sharp": "^0.17.1"
   },
   "devDependencies": {
