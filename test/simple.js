@@ -31,7 +31,6 @@ describe("Sharpie middleware", function suite() {
 				done();
 			});
 		});
-
 	});
 
 	it("should resize a jpeg image", function(done) {
@@ -62,7 +61,6 @@ describe("Sharpie middleware", function suite() {
 			});
 			should(res.headers['content-type']).equal('image/jpeg');
 		});
-
 	});
 
 	it("should not allow blacklisted domain", function(done) {
@@ -117,8 +115,29 @@ describe("Sharpie middleware", function suite() {
 				done();
 			});
 		});
-
 	});
 
+	it("should abort request and return 400 when not an image", function(done) {
+		var app = express();
+		var server = app.listen();
+		var port = server.address().port;
+
+		app.get('/file.txt', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				next();
+			}
+		}, function(req, res, next) {
+			res.send('some text');
+		});
+
+		http.get('http://localhost:' + port + '/file.txt').on('response', function(res) {
+			should(res.statusCode).equal(400);
+			server.close();
+			done();
+		});
+	});
 });
 
