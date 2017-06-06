@@ -119,5 +119,23 @@ describe("Sharpie middleware", function suite() {
 			should(res.statusCode).equal(400);
 		});
 	});
+
+	it("should pass 404 gracefully", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image404.jpg?rs=w:50&q=75').catch(function(err) {
+			return err;
+		}).then(function(res) {
+			should(res.statusCode).equal(404);
+		});
+	});
 });
 
