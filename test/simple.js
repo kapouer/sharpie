@@ -121,6 +121,10 @@ describe("Sharpie middleware", function suite() {
 	});
 
 	it("should pass errors gracefully", function() {
+		app.get('/fail.jpg', function(req, res, next) {
+			res.status(500);
+			res.send('Fake server error');
+		});
 		app.get('/images/*', function(req, res, next) {
 			if (req.query.raw === undefined) {
 				req.params.url = req.path + '?raw';
@@ -136,6 +140,11 @@ describe("Sharpie middleware", function suite() {
 		}).then(function(res) {
 			should(res.statusCode).equal(404);
 			return got('http://localhost:' + port + '/images/image500.jpg?rs=w:50&q=75');
+		}).catch(function(err) {
+			return err;
+		}).then(function(res) {
+			should(res.statusCode).equal(500);
+			return got('http://localhost:' + port + '/fail.jpg?rs=w:50&q=75');
 		}).catch(function(err) {
 			return err;
 		}).then(function(res) {
