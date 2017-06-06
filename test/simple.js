@@ -120,7 +120,7 @@ describe("Sharpie middleware", function suite() {
 		});
 	});
 
-	it("should pass 404 gracefully", function() {
+	it("should pass errors gracefully", function() {
 		app.get('/images/*', function(req, res, next) {
 			if (req.query.raw === undefined) {
 				req.params.url = req.path + '?raw';
@@ -135,6 +135,11 @@ describe("Sharpie middleware", function suite() {
 			return err;
 		}).then(function(res) {
 			should(res.statusCode).equal(404);
+			return got('http://localhost:' + port + '/images/image500.jpg?rs=w:50&q=75');
+		}).catch(function(err) {
+			return err;
+		}).then(function(res) {
+			should(res.statusCode).equal(500);
 		});
 	});
 });
