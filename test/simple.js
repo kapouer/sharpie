@@ -2,17 +2,22 @@ var should = require('should');
 var fs = require('fs');
 var URL = require('url');
 var express = require('express');
-var http = require('http');
+var got = require('got');
 
 var sharpie = require('../');
 
 describe("Sharpie middleware", function suite() {
+	var app, server, port;
+	before(function() {
+		app = express();
+		server = app.listen();
+		port = server.address().port;
+	});
+	after(function() {
+		if (server) server.close();
+	});
 
-	it("should pass through images with unsupported format", function(done) {
-		var app = express();
-		var server = app.listen();
-		var port = server.address().port;
-
+	it("should pass through images with unsupported format", function() {
 		app.get('/images/*', function(req, res, next) {
 			if (req.query.raw === undefined) {
 				req.params.url = req.path + '?raw';
@@ -23,21 +28,16 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		http.get('http://localhost:' + port + '/images/image.ico').on('response', function(res) {
+		return got('http://localhost:' + port + '/images/image.ico').then(function(res) {
 			should(res.statusCode).equal(200);
-			http.get('http://localhost:' + port + '/images/image.svg').on('response', function(res) {
-				should(res.statusCode).equal(200);
-				server.close();
-				done();
-			});
+		}).then(function() {
+			return got('http://localhost:' + port + '/images/image.svg');
+		}).then(function(res) {
+			should(res.statusCode).equal(200);
 		});
 	});
 
-	it("should resize a jpeg image", function(done) {
-		var app = express();
-		var server = app.listen();
-		var port = server.address().port;
-
+	it("should resize a jpeg image", function() {
 		app.get('/images/*', function(req, res, next) {
 			if (req.query.raw === undefined) {
 				req.params.url = req.path + '?raw';
@@ -48,26 +48,14 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		http.get('http://localhost:' + port + '/images/image.jpg?rs=w:50&q=75').on('response', function(res) {
+		return got('http://localhost:' + port + '/images/image.jpg?rs=w:50&q=75').then(function(res) {
 			should(res.statusCode).equal(200);
-			var len = 0;
-			res.on('data', function(buf) {
-				len += buf.length;
-			});
-			res.on('end', function() {
-				should(len).equal(636);
-				server.close();
-				done();
-			});
+			should(res.body.length == 636);
 			should(res.headers['content-type']).equal('image/jpeg');
 		});
 	});
 
-	it("should not allow blacklisted domain", function(done) {
-		var app = express();
-		var server = app.listen();
-		var port = server.address().port;
-
+	it("should not allow blacklisted domain", function() {
 		app.get('/', sharpie({
 			hostnames: function(hostname) {
 				if (hostname == 'www.gravatar.com') return true;
@@ -75,22 +63,22 @@ describe("Sharpie middleware", function suite() {
 			}
 		}));
 
-		http.get('http://localhost:' + port + '/?url=' + encodeURIComponent('http://www.gravatar.com/avatar/0.jpg')).on('response', function(res) {
+		return got('http://localhost:' + port, {query: {
+			url: 'http://www.gravatar.com/avatar/0.jpg'
+		}}).then(function(res) {
 			should(res.statusCode).equal(200);
 			should(res.headers['content-type']).equal('image/jpeg');
-			http.get('http://localhost:' + port + '/?url=' + encodeURIComponent('https://avatars0.githubusercontent.com/u/0')).on('response', function(res) {
+			return got('http://localhost:' + port, {query:{
+				url: 'https://avatars0.githubusercontent.com/u/0'
+			}}).catch(function(err) {
+				return err;
+			}).then(function(res) {
 				should(res.statusCode).equal(403);
-				server.close();
-				done();
 			});
 		});
 	});
 
-	it("should append style tag to svg root element", function(done) {
-		var app = express();
-		var server = app.listen();
-		var port = server.address().port;
-
+	it("should append style tag to svg root element", function() {
 		app.get('/images/*', function(req, res, next) {
 			if (req.query.raw === undefined) {
 				req.params.url = req.path + '?raw';
@@ -101,27 +89,19 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		http.get('http://localhost:' + port + '/images/image.svg?style=*%7Bfill%3Ared%3B%7D').on('response', function(res) {
+		return got('http://localhost:' + port + '/images/image.svg', {query:{
+			style: '*{fill:red;}'
+		}}).then(function(res) {
 			should(res.statusCode).equal(200);
-			var xml = "";
-			res.on('data', function(buf) {
-				xml += buf.toString();
-			});
-			res.on('end', function() {
-				should(xml).containEql(`<svg width="600" height="600" version="1.0"><style type="text/css"><![CDATA[
+			should(res.body).containEql(
+`<svg width="600" height="600" version="1.0"><style type="text/css"><![CDATA[
 *{fill:red;}
-]]</style>`);
-				server.close();
-				done();
-			});
+]]</style>`
+			);
 		});
 	});
 
-	it("should abort request and return 400 when not an image", function(done) {
-		var app = express();
-		var server = app.listen();
-		var port = server.address().port;
-
+	it("should abort request and return 400 when not an image", function() {
 		app.get('/file.txt', function(req, res, next) {
 			if (req.query.raw === undefined) {
 				req.params.url = req.path + '?raw';
@@ -133,10 +113,10 @@ describe("Sharpie middleware", function suite() {
 			res.send('some text');
 		});
 
-		http.get('http://localhost:' + port + '/file.txt').on('response', function(res) {
+		return got('http://localhost:' + port + '/file.txt').catch(function(err) {
+			return err;
+		}).then(function(res) {
 			should(res.statusCode).equal(400);
-			server.close();
-			done();
 		});
 	});
 });
