@@ -153,6 +153,27 @@ describe("Sharpie middleware", function suite() {
 		});
 	});
 
+	it("should add viewBox and preserveAspectRatio attributes and style to svg root element", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image.svg', {query:{
+			style: '*{fill:red;}'
+		}}).then(function(res) {
+			should(res.statusCode).equal(200);
+			should(res.body).containEql(`<svg x="100" y="50" width="200" height="400" version="1.0" viewBox="100 50 200 400" preserveAspectRatio="xMinYMin"><style type="text/css"><![CDATA[
+*{fill:red;}
+]]></style>`);
+		});
+	});
+
 	it("should abort request and return 400 when not an image", function() {
 		app.get('/file.txt', function(req, res, next) {
 			if (req.query.raw === undefined) {
