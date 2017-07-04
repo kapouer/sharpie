@@ -93,11 +93,33 @@ describe("Sharpie middleware", function suite() {
 			style: '*{fill:red;}'
 		}}).then(function(res) {
 			should(res.statusCode).equal(200);
-			should(res.body).containEql(
-`<svg width="600" height="600" version="1.0"><style type="text/css"><![CDATA[
+			should(res.body).containEql(`<svg width="600" height="600" version="1.0"><style type="text/css"><![CDATA[
 *{fill:red;}
-]]</style>`
-			);
+]]></style>`);
+		});
+	});
+
+	it("should add preserveAspectRatio attribute to svg root element with a value of xMaxYMid", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image-boxed.svg', {query:{
+			ratio: 'xMaxYMid'
+		}}).then(function(res) {
+			should(res.statusCode).equal(200);
+			should(res.body).containEql(`<svg
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   height="6.7900095"
+   width="30.449219"
+   viewBox="0 0 30.449219 6.7900095" preserveAspectRatio="xMaxYMid">`);
 		});
 	});
 
