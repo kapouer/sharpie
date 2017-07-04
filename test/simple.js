@@ -30,10 +30,23 @@ describe("Sharpie middleware", function suite() {
 
 		return got('http://localhost:' + port + '/images/image.ico').then(function(res) {
 			should(res.statusCode).equal(200);
-		}).then(function() {
-			return got('http://localhost:' + port + '/images/image.svg');
-		}).then(function(res) {
+		});
+	});
+
+	it("should pass through unparsable svg", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/wrong.svg').then(function(res) {
 			should(res.statusCode).equal(200);
+			should(res.body).containEql('<svg ="100" y="50"');
 		});
 	});
 
