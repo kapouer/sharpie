@@ -17,7 +17,8 @@ var sharpie = require('sharpie')({
 	bg: 'white',
 	crop: 'center',
 	flatten: true,
-	hostnames: false
+	hostnames: false,
+	ratio: 'minXMinY'
 });
 
 // will get the url through req.params[opts.param] – e.g /param/foo.jpg
@@ -51,6 +52,10 @@ the middleware:
 * style  
   new in version 2.3  
   appends a style tag with that content to the svg root
+* ratio  
+  new in version 2.4  
+  sets preserveAspectRatio attribute, and if viewBox is missing, add it  
+  (provided width and height attributes, and optionally x, y, are present).
 
 Since version 1.4 svg support has been dropped and replaced by passing svg
 through unmodified.
