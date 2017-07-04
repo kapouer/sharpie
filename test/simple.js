@@ -102,11 +102,11 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.svg', {query:{
+		return got('http://localhost:' + port + '/images/image-unboxed.svg', {query:{
 			style: '*{fill:red;}'
 		}}).then(function(res) {
 			should(res.statusCode).equal(200);
-			should(res.body).containEql(`<svg width="600" height="600" version="1.0"><style type="text/css"><![CDATA[
+			should(res.body).containEql(`<svg version="1.0"><style type="text/css"><![CDATA[
 *{fill:red;}
 ]]></style>`);
 		});
