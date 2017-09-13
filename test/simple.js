@@ -222,6 +222,9 @@ describe("Sharpie middleware", function suite() {
 			return err;
 		}).then(function(res) {
 			should(res.statusCode).equal(500);
+			return got('http://localhost:' + port + '/images/image.jpg?rs=w:123123123123&q=75');
+		}).catch(function(res) {
+			should(res.statusCode).equal(500);
 		});
 	});
 });
