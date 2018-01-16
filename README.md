@@ -42,6 +42,7 @@ the middleware:
   w:452,h=123,min  
   w:452,h=123,max  
   w:452,enlarge
+  z:55,enlarge
 * bg  
   the background color  
   defaults to no background color
