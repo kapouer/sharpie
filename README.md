@@ -34,7 +34,7 @@ that can be given as parameters or as defaults when initializing
 the middleware:
 
 * format  
-  jpeg, png, webp, raw  
+  the destination format (jpeg, png, webp, raw)  
   defaults to format of the original image, or jpeg
 * q  
   quality, default 90
@@ -64,6 +64,9 @@ the middleware:
 
 Since version 1.4 svg support has been dropped and replaced by passing svg
 through unmodified.
+Since version 2.8 converting svg explicitely to another format is supported
+(depending on how vips is built), and if when no other format is specified,
+svg is returned.
 
 Content-Type is set by sharpie middleware in the HTTP response header.
 
