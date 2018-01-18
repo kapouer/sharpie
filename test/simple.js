@@ -97,6 +97,28 @@ describe("Sharpie middleware", function suite() {
 		});
 	});
 
+	it("should convert a svg image to png preview", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/pb.svg?format=png&rs=z:25', {encoding: null}).then(function(res) {
+			should(res.statusCode).equal(200);
+			should(res.headers['content-type']).equal('image/png');
+			return sharp(res.body).metadata().then(function(meta) {
+				should(meta.width).equal(64);
+				should(meta.height).equal(64);
+				should(meta.format).equal('png');
+			});
+		});
+	});
+
 	it("should extract a jpeg image", function() {
 		app.get('/images/*', function(req, res, next) {
 			if (req.query.raw === undefined) {
