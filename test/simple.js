@@ -9,12 +9,12 @@ var sharpie = require('../');
 
 describe("Sharpie middleware", function suite() {
 	var app, server, port;
-	before(function() {
+	beforeEach(function() {
 		app = express();
 		server = app.listen();
 		port = server.address().port;
 	});
-	after(function() {
+	afterEach(function() {
 		if (server) server.close();
 	});
 
