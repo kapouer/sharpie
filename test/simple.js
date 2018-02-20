@@ -74,6 +74,34 @@ describe("Sharpie middleware", function suite() {
 		});
 	});
 
+	it("should set signs", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie({
+					signs: {
+						assignment: '~',
+						separator: '!'
+					}
+				})(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image.jpg?rs=w~50!z~50&q=75', {encoding: null}).then(function(res) {
+			should(res.statusCode).equal(200);
+			should(res.body.length).equal(417);
+			should(res.headers['content-type']).equal('image/jpeg');
+			return sharp(res.body).metadata().then(function(meta) {
+				should(meta.width).equal(25);
+				should(meta.height).equal(25);
+				should(meta.format).equal('jpeg');
+			});
+		});
+	});
+
 	it("should resize a jpeg image using rs:z param", function() {
 		app.get('/images/*', function(req, res, next) {
 			if (req.query.raw === undefined) {

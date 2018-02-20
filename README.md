@@ -18,7 +18,11 @@ var sharpie = require('sharpie')({
 	crop: 'center',
 	flatten: true,
 	hostnames: false,
-	ratio: 'minXMinY'
+	ratio: 'minXMinY',
+	signs: {
+		assignment: ':', // use ~ for better uri-encoding
+		separator: ','  // use ! for better uri-encoding
+	}
 });
 
 // will get the url through req.params[opts.param] – e.g /param/foo.jpg
