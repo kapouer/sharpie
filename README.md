@@ -71,6 +71,8 @@ through unmodified.
 Since version 2.8 converting svg explicitely to another format is supported
 (depending on how vips is built), and if when no other format is specified,
 svg is returned.
+Since version 3.3 resize (rs) and extract (ex) apply to svg as well, provided
+their root element has enough information to define a viewBox.
 
 Content-Type is set by sharpie middleware in the HTTP response header.
 
