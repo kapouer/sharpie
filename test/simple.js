@@ -208,7 +208,7 @@ describe("Sharpie middleware", function suite() {
 			style: '*{fill:red;}'
 		}}).then(function(res) {
 			should(res.statusCode).equal(200);
-			should(res.body).containEql(`<svg version="1.0"><style type="text/css"><![CDATA[
+			should(res.body).containEql(`<svg xmlns="http://www.w3.org/2000/svg" version="1.0" preserveAspectRatio="xMinYMin"><style type="text/css"><![CDATA[
 *{fill:red;}
 ]]></style>`);
 		});
@@ -229,12 +229,7 @@ describe("Sharpie middleware", function suite() {
 			ratio: 'xMaxYMid'
 		}}).then(function(res) {
 			should(res.statusCode).equal(200);
-			should(res.body).containEql(`<svg
-   xmlns="http://www.w3.org/2000/svg"
-   version="1.0"
-   height="6.7900095"
-   width="30.449219"
-   viewBox="0 0 30.449219 6.7900095" preserveAspectRatio="xMaxYMid">`);
+			should(res.body).containEql(`<svg xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 30.449219 6.7900095" preserveAspectRatio="xMaxYMid">`);
 		});
 	});
 
@@ -251,11 +246,11 @@ describe("Sharpie middleware", function suite() {
 
 		return got('http://localhost:' + port + '/images/image.svg').then(function(res) {
 			should(res.statusCode).equal(200);
-			should(res.body).containEql(`<svg x="100" y="50" width="200" height="400" version="1.0" viewBox="100 50 200 400" preserveAspectRatio="xMinYMin">`);
+			should(res.body).containEql(`<svg xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="30 10 30 30" preserveAspectRatio="xMinYMin">`);
 		});
 	});
 
-	it("should add viewBox and preserveAspectRatio attributes and style to svg root element", function() {
+	it("should change width attribute of svg root element", function() {
 		app.get('/images/*', function(req, res, next) {
 			if (req.query.raw === undefined) {
 				req.params.url = req.path + '?raw';
@@ -266,13 +261,26 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.svg', {query:{
-			style: '*{fill:red;}'
-		}}).then(function(res) {
+		return got('http://localhost:' + port + '/images/image.svg?rs=w:50,min').then(function(res) {
 			should(res.statusCode).equal(200);
-			should(res.body).containEql(`<svg x="100" y="50" width="200" height="400" version="1.0" viewBox="100 50 200 400" preserveAspectRatio="xMinYMin"><style type="text/css"><![CDATA[
-*{fill:red;}
-]]></style>`);
+			should(res.body).containEql(`<svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="50" viewBox="30 10 30 30" preserveAspectRatio="xMinYMin">`);
+		});
+	});
+
+	it("should change width and height from rs:z of svg root element", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image.svg?rs=z:50').then(function(res) {
+			should(res.statusCode).equal(200);
+			should(res.body).containEql(`<svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="15" height="15" viewBox="30 10 30 30" preserveAspectRatio="xMinYMin">`);
 		});
 	});
 
