@@ -23,15 +23,15 @@
     "url": "https://github.com/kapouer/sharpie/issues"
   },
   "dependencies": {
-    "debug": "^2.4.4",
-    "got": "^7.0.0",
+    "debug": "^3.1.0",
+    "got": "^8.3.1",
     "media-typer": "^0.3.0",
-    "sharp": "^0.20.2",
+    "sharp": "^0.20.5",
     "xml-js": "^1.6.4"
   },
   "devDependencies": {
-    "express": "^4.14.0",
-    "mocha": "^3.2.0",
-    "should": "^11.1.2"
+    "express": "latest",
+    "mocha": "latest",
+    "should": "latest"
   }
 }
