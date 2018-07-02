@@ -38,8 +38,9 @@ that can be given as parameters or as defaults when initializing
 the middleware:
 
 * format  
-  the destination format (jpeg, png, webp, raw)  
-  defaults to format of the original image, or jpeg
+  the destination format (jpeg, png, webp, raw, svg, ...)  
+  defaults to format of the original image, or jpeg  
+  since 3.4.0, sharpie.formats contains runtime information about supported formats.
 * q  
   quality, default 90
 * rs  
