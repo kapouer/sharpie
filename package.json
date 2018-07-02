@@ -13,11 +13,11 @@
     "url": "https://github.com/kapouer/sharpie.git"
   },
   "keywords": [
-    "resize",
+    "resize", "convert",
     "image",
-    "connect",
-    "middleware",
-    "vips"
+    "express",
+    "sharp",
+    "ico", "favicon"
   ],
   "bugs": {
     "url": "https://github.com/kapouer/sharpie/issues"
