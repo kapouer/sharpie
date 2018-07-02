@@ -19,6 +19,8 @@ var sharpie = require('sharpie')({
 	flatten: true,
 	hostnames: false,
 	ratio: 'minXMinY',
+	sizes: '64,32,16',      // these two options for ico output format support
+	im: '/usr/bin/convert', // since version 3.4.0
 	signs: {
 		assignment: ':', // use ~ for better uri-encoding
 		separator: ','  // use ! for better uri-encoding
@@ -87,7 +89,16 @@ hostnames that sharpie can proxy. This option can be
 Since version 2.0 responses with statusCode >= 400
 [pass control to next middleware](https://github.com/kapouer/sharpie/pull/4):
 - next() when 404
-- or next(err) with err.status = res.statusCode 
+- or next(err) with err.status = res.statusCode
+
+Since version 3.4 it is possible to use imagemagick to convert to ico file format:
+* im  
+  path to im's convert executable. None is set by default.
+* sizes  
+  the sizes of the favicon in ico format, separated by a comma.  
+  defaults to 64,32,16.
+* bg  
+  the background color
 
 
 This module does not offer any kind of cache, and will stay as simple as

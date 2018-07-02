@@ -147,6 +147,26 @@ describe("Sharpie middleware", function suite() {
 		});
 	});
 
+	it("should convert a svg image to a favicon", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie({
+					im: '/usr/bin/convert'
+				})(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/pb.svg?format=ico', {encoding: null}).then(function(res) {
+			should(res.statusCode).equal(200);
+			should(res.headers['content-type']).equal('image/x-icon');
+			should(res.body.length).equal(22382);
+		});
+	});
+
 	it("should extract a jpeg image", function() {
 		app.get('/images/*', function(req, res, next) {
 			if (req.query.raw === undefined) {
