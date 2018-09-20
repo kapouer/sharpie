@@ -2,7 +2,7 @@ var should = require('should');
 var fs = require('fs');
 var URL = require('url');
 var express = require('express');
-var got = require('got');
+var got = require('got').extend({retry: 0});
 var sharp = require('sharp');
 
 var sharpie = require('../');
