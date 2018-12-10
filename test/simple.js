@@ -374,5 +374,26 @@ describe("Sharpie middleware", function suite() {
 			should(res.statusCode).equal(500);
 		});
 	});
+
+	it("should get color of a jpeg image", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/color.jpg?color', {encoding: null}).then(function(res) {
+			should(res.headers['content-type']).equal('image/jpeg');
+			return sharp(res.body).metadata().then(function(meta) {
+				should(meta.width).equal(1232);
+				should(meta.height).equal(816);
+				should(meta.format).equal('jpeg');
+			});
+		});
+	});
 });
 
