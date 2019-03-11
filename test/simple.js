@@ -212,7 +212,7 @@ describe("Sharpie middleware", function suite() {
 
 		return got('http://localhost:' + port + '/images/image.jpg?ex=x:50,y:50,w:50,h:100', {encoding: null}).then(function(res) {
 			should(res.statusCode).equal(200);
-			should(res.body.length).lessThan(809);
+			should(res.body.length).lessThan(810);
 			should(res.headers['content-type']).equal('image/jpeg');
 			return sharp(res.body).metadata().then(function(meta) {
 				should(meta.width).equal(50);
