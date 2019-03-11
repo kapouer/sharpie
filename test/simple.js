@@ -1,6 +1,4 @@
 var should = require('should');
-var fs = require('fs');
-var URL = require('url');
 var express = require('express');
 var got = require('got').extend({retry: 0});
 var sharp = require('sharp');
@@ -64,13 +62,30 @@ describe("Sharpie middleware", function suite() {
 
 		return got('http://localhost:' + port + '/images/image.jpg?rs=w:50&q=75', {encoding: null}).then(function(res) {
 			should(res.statusCode).equal(200);
-			should(res.body.length).equal(635);
+			should(res.body.length).lessThan(635);
 			should(res.headers['content-type']).equal('image/jpeg');
 			return sharp(res.body).metadata().then(function(meta) {
 				should(meta.width).equal(50);
 				should(meta.height).equal(50);
 				should(meta.format).equal('jpeg');
 			});
+		});
+	});
+
+	it("should resize a jpeg image and return 400 with bad params", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image.jpg?rs=w:0,h:10&q=75', {encoding: null}).catch(function(res) {
+			should(res.statusCode).equal(400);
+			should(res.headers['content-type']).equal('text/plain; charset=utf-8');
 		});
 	});
 
@@ -92,7 +107,7 @@ describe("Sharpie middleware", function suite() {
 
 		return got('http://localhost:' + port + '/images/image.jpg?rs=w~50!z~50&q=75', {encoding: null}).then(function(res) {
 			should(res.statusCode).equal(200);
-			should(res.body.length).equal(417);
+			should(res.body.length).lessThan(417);
 			should(res.headers['content-type']).equal('image/jpeg');
 			return sharp(res.body).metadata().then(function(meta) {
 				should(meta.width).equal(25);
@@ -115,13 +130,30 @@ describe("Sharpie middleware", function suite() {
 
 		return got('http://localhost:' + port + '/images/image.jpg?rs=z:30&q=75', {encoding: null}).then(function(res) {
 			should(res.statusCode).equal(200);
-			should(res.body.length).equal(430);
+			should(res.body.length).lessThan(430);
 			should(res.headers['content-type']).equal('image/jpeg');
 			return sharp(res.body).metadata().then(function(meta) {
 				should(meta.width).equal(30);
 				should(meta.height).equal(30);
 				should(meta.format).equal('jpeg');
 			});
+		});
+	});
+
+	it("should resize a png image and not crash if rs:z param is wrong", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image.png?ex=x:50,y:50,w:80,h:1&rs=z:1&q=75', {encoding: null}).then(function(res) {
+		}).catch(function(res) {
+			should(res.statusCode).equal(500);
 		});
 	});
 
@@ -180,13 +212,30 @@ describe("Sharpie middleware", function suite() {
 
 		return got('http://localhost:' + port + '/images/image.jpg?ex=x:50,y:50,w:50,h:100', {encoding: null}).then(function(res) {
 			should(res.statusCode).equal(200);
-			should(res.body.length).equal(809);
+			should(res.body.length).lessThan(809);
 			should(res.headers['content-type']).equal('image/jpeg');
 			return sharp(res.body).metadata().then(function(meta) {
 				should(meta.width).equal(50);
 				should(meta.height).equal(100);
 				should(meta.format).equal('jpeg');
 			});
+		});
+	});
+
+	it("should extract a jpeg image and return 400 with bad parameters", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image.jpg?ex=x:50,y:50,w:0,h:100', {encoding: null}).catch(function(res) {
+			should(res.statusCode).equal(400);
+			should(res.headers['content-type']).equal('text/plain; charset=utf-8');
 		});
 	});
 
@@ -386,12 +435,13 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/color.jpg?color', {encoding: null}).then(function(res) {
-			should(res.headers['content-type']).equal('image/jpeg');
+		return got('http://localhost:' + port + '/images/color.jpg?color&format=png', {encoding: null}).then(function(res) {
+			should(res.headers['content-type']).equal('image/png');
+			should(res.body.length).lessThan(6200);
 			return sharp(res.body).metadata().then(function(meta) {
 				should(meta.width).equal(1232);
 				should(meta.height).equal(816);
-				should(meta.format).equal('jpeg');
+				should(meta.format).equal('png');
 			});
 		});
 	});
