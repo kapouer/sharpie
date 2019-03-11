@@ -435,7 +435,7 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/color.jpg?color&format=png', {encoding: null}).then(function(res) {
+		return got('http://localhost:' + port + '/images/color.jpg?mean&format=png', {encoding: null}).then(function(res) {
 			should(res.headers['content-type']).equal('image/png');
 			should(res.body.length).lessThan(6200);
 			return sharp(res.body).metadata().then(function(meta) {

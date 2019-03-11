@@ -68,6 +68,10 @@ the middleware:
   new in version 2.5  
   extracts a region of the image, given center x, y, width and height in % of the
   image. This means `ex=x:50,y:50,w:100,h:100` extracts the full image.
+* mean  
+  new in version 3.5  
+  the image has all pixels color set to the image average color.  
+  While this is not the "dominant" color, it can be useful as a placeholder.
 
 Since version 1.4 svg support has been dropped and replaced by passing svg
 through unmodified.
