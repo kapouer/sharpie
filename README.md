@@ -1,7 +1,12 @@
 sharpie
 =======
 
-A simple express middleware for resizing images using sharp and pipes
+A simple express middleware for resizing images using sharp and pipes.
+
+When format parameter is not set and content negotiation allows it,
+jpeg, png, and tiff images are converted to webp images, and Vary:Accept is set
+on the response headers.
+
 
 Usage
 -----
@@ -41,7 +46,8 @@ the middleware:
 
 * format  
   the destination format (jpeg, png, webp, raw, svg, ...)  
-  defaults to format of the original image, or jpeg  
+  defaults to format of the original image, or webp if negotiable, (since
+  version 4), or jpeg.  
   since 3.4.0, sharpie.formats contains runtime information about supported formats.
 * q  
   quality, default 90
@@ -104,6 +110,11 @@ Since version 3.4 it is possible to use imagemagick to convert to ico file forma
 * bg  
   the background color
 
+Since version 4, default optimizations options are set:
+- jpeg: trellisQuantisation, overshootDeringing, and if image is > 10kb,
+optimizeScans
+- png: palette
+- webp: nearLossless when converting from png
 
 This module does not offer any kind of cache, and will stay as simple as
 possible.
