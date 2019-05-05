@@ -423,7 +423,7 @@ describe("Sharpie middleware", function suite() {
 		});
 	});
 
-	it("should abort request and return 400 when not an image", function() {
+	it("should just pipe request when not an image", function() {
 		app.get('/file.txt', function(req, res, next) {
 			if (req.query.raw === undefined) {
 				req.params.url = req.path + '?raw';
@@ -438,7 +438,8 @@ describe("Sharpie middleware", function suite() {
 		return got('http://localhost:' + port + '/file.txt').catch(function(err) {
 			return err;
 		}).then(function(res) {
-			should(res.statusCode).equal(400);
+			should(res.statusCode).equal(200);
+			should(res.body).equal('some text');
 		});
 	});
 
