@@ -119,3 +119,6 @@ optimizeScans
 This module does not offer any kind of cache, and will stay as simple as
 possible.
 
+Since version 4.1, when content-type is not an image, a warning is logged
+and the data is just passed on.
+
