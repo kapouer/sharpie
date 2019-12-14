@@ -85,11 +85,51 @@ describe("Sharpie middleware", function suite() {
 		}, express.static(__dirname + '/images'));
 
 		return got('http://localhost:' + port + '/images/image.jpg?rs=w:aa&q=75', {encoding: null}).then(function(res) {
+			should("not").not.equal("be here");
+		}).catch(function(err) {
+			should(err.statusCode).equal(400);
+			should(err.body.toString()).equal("Bad parameter: rs:w");
+		});
+	});
+
+	it("should fail to resize a jpeg image because bg is bad", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image.jpg?rs=w:20&bg=33F', {encoding: null}).then(function(res) {
 			should("not").be.equal("be here");
 		}).catch(function(err) {
 			should(err.statusCode).equal(400);
+			should(err.body.toString()).equal("Bad parameter: bg");
 		});
 	});
+
+	it("should fail to flatten a png image because bg is bad", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image.png?flatten=1&bg=33F', {encoding: null}).then(function(res) {
+			should("not").be.equal("be here");
+		}).catch(function(err) {
+			should(err.statusCode).equal(400);
+			should(err.body.toString()).equal("Bad parameter: bg");
+		});
+	});
+
 
 	it("should fail to resize a jpeg image because q is bad", function() {
 		app.get('/images/*', function(req, res, next) {
@@ -106,6 +146,7 @@ describe("Sharpie middleware", function suite() {
 			should("not").be.equal("be here");
 		}).catch(function(err) {
 			should(err.statusCode).equal(400);
+			should(err.body.toString()).equal("Bad parameter: q");
 		});
 	});
 
