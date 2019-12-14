@@ -73,6 +73,43 @@ describe("Sharpie middleware", function suite() {
 	});
 
 
+	it("should fail to resize a jpeg image because rs is bad", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image.jpg?rs=w:aa&q=75', {encoding: null}).then(function(res) {
+			should("not").be.equal("be here");
+		}).catch(function(err) {
+			should(err.statusCode).equal(400);
+		});
+	});
+
+	it("should fail to resize a jpeg image because q is bad", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image.jpg?q=SELECT', {encoding: null}).then(function(res) {
+			should("not").be.equal("be here");
+		}).catch(function(err) {
+			should(err.statusCode).equal(400);
+		});
+	});
+
+
 	it("should convert jpeg to webp", function() {
 		app.get('/images/*', function(req, res, next) {
 			if (req.query.raw === undefined) {
