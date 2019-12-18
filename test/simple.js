@@ -203,6 +203,30 @@ describe("Sharpie middleware", function suite() {
 		});
 	});
 
+	it("should convert webp to jpeg", function() {
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image.webp', {
+			headers: {},
+			encoding: null
+		}).then(function(res) {
+			should(res.statusCode).equal(200);
+			// should(res.body.length).lessThan(635);
+			should(res.headers['content-type']).equal('image/jpeg');
+			return sharp(res.body).metadata().then(function(meta) {
+				should(meta.format).equal('jpeg');
+			});
+		});
+	});
+
 	it("should resize a jpeg image and return 400 with bad params", function() {
 		app.get('/images/*', function(req, res, next) {
 			if (req.query.raw === undefined) {
