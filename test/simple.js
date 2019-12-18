@@ -60,7 +60,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.jpg?rs=w:50&q=75', {encoding: null}).then(function(res) {
+		return got('http://localhost:' + port + '/images/image.jpg?rs=w:50&q=75', {
+			encoding: null
+		}).then(function(res) {
 			should(res.statusCode).equal(200);
 			should(res.body.length).lessThan(635);
 			should(res.headers['content-type']).equal('image/jpeg');
@@ -84,7 +86,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.jpg?rs=w:aa&q=75', {encoding: null}).then(function(res) {
+		return got('http://localhost:' + port + '/images/image.jpg?rs=w:aa&q=75', {
+			encoding: null
+		}).then(function(res) {
 			should("not").not.equal("be here");
 		}).catch(function(err) {
 			should(err.statusCode).equal(400);
@@ -103,7 +107,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.jpg?rs=w:20&bg=33F', {encoding: null}).then(function(res) {
+		return got('http://localhost:' + port + '/images/image.jpg?rs=w:20&bg=33F', {
+			encoding: null
+		}).then(function(res) {
 			should("not").be.equal("be here");
 		}).catch(function(err) {
 			should(err.statusCode).equal(400);
@@ -122,7 +128,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.png?flatten=1&bg=33F', {encoding: null}).then(function(res) {
+		return got('http://localhost:' + port + '/images/image.png?flatten=1&bg=33F', {
+			encoding: null
+		}).then(function(res) {
 			should("not").be.equal("be here");
 		}).catch(function(err) {
 			should(err.statusCode).equal(400);
@@ -142,7 +150,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.jpg?q=SELECT', {encoding: null}).then(function(res) {
+		return got('http://localhost:' + port + '/images/image.jpg?q=SELECT', {
+			encoding: null
+		}).then(function(res) {
 			should("not").be.equal("be here");
 		}).catch(function(err) {
 			should(err.statusCode).equal(400);
@@ -162,7 +172,7 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.jpg', {
+		return got('http://localhost:' + port + '/images/image.jpg', {
 			headers: {
 				Accept: 'image/webp,*/*'
 			},
@@ -188,7 +198,7 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.jpg', {
+		return got('http://localhost:' + port + '/images/image.jpg', {
 			headers: {
 				Accept: '*/*'
 			},
@@ -238,7 +248,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.jpg?rs=w:0,h:10&q=75', {encoding: null}).catch(function(res) {
+		return got('http://localhost:' + port + '/images/image.jpg?rs=w:0,h:10&q=75', {
+			encoding: null
+		}).catch(function(res) {
 			should(res.statusCode).equal(400);
 			should(res.headers['content-type']).equal('text/plain; charset=utf-8');
 		});
@@ -260,7 +272,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.jpg?rs=w~50!z~50&q=75', {encoding: null}).then(function(res) {
+		return got('http://localhost:' + port + '/images/image.jpg?rs=w~50!z~50&q=75', {
+			encoding: null
+		}).then(function(res) {
 			should(res.statusCode).equal(200);
 			should(res.body.length).lessThan(417);
 			should(res.headers['content-type']).equal('image/jpeg');
@@ -283,7 +297,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.jpg?rs=z:30&q=75', {encoding: null}).then(function(res) {
+		return got('http://localhost:' + port + '/images/image.jpg?rs=z:30&q=75', {
+			encoding: null
+		}).then(function(res) {
 			should(res.statusCode).equal(200);
 			should(res.body.length).lessThan(430);
 			should(res.headers['content-type']).equal('image/jpeg');
@@ -306,7 +322,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.png?ex=x:50,y:50,w:80,h:1&rs=z:1&q=75', {encoding: null}).then(function(res) {
+		return got('http://localhost:' + port + '/images/image.png?ex=x:50,y:50,w:80,h:1&rs=z:1&q=75', {
+			encoding: null
+		}).then(function(res) {
 		}).catch(function(res) {
 			should(res.statusCode).equal(500);
 		});
@@ -323,7 +341,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/pb.svg?format=png&rs=z:25', {encoding: null}).then(function(res) {
+		return got('http://localhost:' + port + '/images/pb.svg?format=png&rs=z:25', {
+			encoding: null
+		}).then(function(res) {
 			should(res.statusCode).equal(200);
 			should(res.headers['content-type']).equal('image/png');
 			return sharp(res.body).metadata().then(function(meta) {
@@ -347,7 +367,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/pb.svg?format=ico', {encoding: null}).then(function(res) {
+		return got('http://localhost:' + port + '/images/pb.svg?format=ico', {
+			encoding: null
+		}).then(function(res) {
 			should(res.statusCode).equal(200);
 			should(res.headers['content-type']).equal('image/x-icon');
 			should(res.body.length).equal(22382);
@@ -365,7 +387,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.jpg?ex=x:50,y:50,w:50,h:100', {encoding: null}).then(function(res) {
+		return got('http://localhost:' + port + '/images/image.jpg?ex=x:50,y:50,w:50,h:100', {
+			encoding: null
+		}).then(function(res) {
 			should(res.statusCode).equal(200);
 			should(res.body.length).lessThan(810);
 			should(res.headers['content-type']).equal('image/jpeg');
@@ -388,7 +412,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/image.jpg?ex=x:50,y:50,w:0,h:100', {encoding: null}).catch(function(res) {
+		return got('http://localhost:' + port + '/images/image.jpg?ex=x:50,y:50,w:0,h:100', {
+			encoding: null
+		}).catch(function(res) {
 			should(res.statusCode).equal(400);
 			should(res.headers['content-type']).equal('text/plain; charset=utf-8');
 		});
@@ -591,7 +617,9 @@ describe("Sharpie middleware", function suite() {
 			}
 		}, express.static(__dirname + '/images'));
 
-		return got('http://localhost:' + port + '/images/color.jpg?mean&format=png', {encoding: null}).then(function(res) {
+		return got('http://localhost:' + port + '/images/color.jpg?mean&format=png', {
+			encoding: null
+		}).then(function(res) {
 			should(res.headers['content-type']).equal('image/png');
 			should(res.body.length).lessThan(6200);
 			return sharp(res.body).metadata().then(function(meta) {
