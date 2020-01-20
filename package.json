@@ -1,6 +1,6 @@
 {
   "name": "sharpie",
-  "version": "4.3.4",
+  "version": "4.4.0",
   "description": "A simple express middleware for resizing images using sharp and pipes",
   "scripts": {
     "test": "mocha"
