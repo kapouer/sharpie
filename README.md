@@ -59,6 +59,8 @@ the middleware:
 * bg  
   the background color for flatten and resize  
   defaults to no background color
+* fg  
+  fill color for svg (simpler than using style)  
 * crop  
   center, north, northeast, ...
 * flatten  
@@ -86,6 +88,7 @@ Since version 2.8 converting svg explicitely to another format is supported
 svg is returned.
 Since version 3.3 resize (rs) and extract (ex) apply to svg as well, provided
 their root element has enough information to define a viewBox.
+Since version 4.4 the foreground color (fg) can change svg fill color.
 
 Content-Type is set by sharpie middleware in the HTTP response header.
 
