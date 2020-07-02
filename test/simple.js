@@ -416,7 +416,7 @@ describe("Sharpie middleware", function suite() {
 			encoding: null
 		}).then(function(res) {
 			should(res.statusCode).equal(200);
-			should(res.body.length).lessThan(810);
+			should(res.body.length).lessThan(840);
 			should(res.headers['content-type']).equal('image/jpeg');
 			return sharp(res.body).metadata().then(function(meta) {
 				should(meta.width).equal(50);
