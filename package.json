@@ -30,7 +30,7 @@
     "debug": "^4.0.1",
     "got": "^9.6.0",
     "media-typer": "^1.1.0",
-    "sharp": "0.23.0",
+    "sharp": "^0.24.1",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
