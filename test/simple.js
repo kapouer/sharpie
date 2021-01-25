@@ -49,6 +49,23 @@ describe("Sharpie middleware", function suite() {
 		});
 	});
 
+	it("should support self-closed svg", function () {
+		app.get('/images/*', function (req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/empty.svg').then(function (res) {
+			should(res.statusCode).equal(200); console.log(res.body);
+			should(res.body).containEql('preserveAspectRatio="xMinYMin"/>');
+		});
+	});
+
 	it("should resize a jpeg image", function() {
 		app.get('/images/*', function(req, res, next) {
 			if (req.query.raw === undefined) {
