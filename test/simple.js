@@ -503,6 +503,7 @@ describe("Sharpie middleware", function suite() {
 			should(res.body).containEql(`<svg xmlns="http://www.w3.org/2000/svg" version="1.0" preserveAspectRatio="xMinYMin"><style type="text/css"><![CDATA[
 *{fill:red;}
 ]]></style>`);
+			should(res.body).containEql('</svg>');
 		});
 	});
 
