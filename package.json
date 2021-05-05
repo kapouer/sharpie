@@ -25,9 +25,9 @@
     "url": "https://github.com/kapouer/sharpie/issues"
   },
   "dependencies": {
-    "color-string": "^1.5.3",
+    "color-string": "^1.5.5",
     "content-type": "^1.0.4",
-    "debug": "^4.0.1",
+    "debug": "^4.3.1",
     "got": "^11.8.2",
     "media-typer": "^1.1.0",
     "sharp": "^0.24.1",
