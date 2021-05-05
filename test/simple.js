@@ -560,6 +560,34 @@ describe("Sharpie middleware", function suite() {
 		});
 	});
 
+	it("should support gzipped svg", function () {
+		const compression = require('compression');
+		let called = false;
+		app.use(compression({
+			threshold: '0kb',
+			filter: function (req, res) {
+				called = true;
+				return true;
+			}
+		}));
+		app.get('/images/*', function(req, res, next) {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image.svg?rs=w:50,min').then(function (res) {
+			should(called).equal(true);
+			should(res.headers['content-encoding']).equal('gzip');
+			should(res.statusCode).equal(200);
+			should(res.body).containEql(`<svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="50" viewBox="30 10 30 30" preserveAspectRatio="xMinYMin">`);
+		});
+	});
+
 	it("should change svg viewBox from extract parameters", function() {
 		app.get('/images/*', function(req, res, next) {
 			if (req.query.raw === undefined) {
