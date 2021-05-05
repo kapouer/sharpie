@@ -28,7 +28,7 @@
     "color-string": "^1.5.3",
     "content-type": "^1.0.4",
     "debug": "^4.0.1",
-    "got": "^9.6.0",
+    "got": "^11.8.2",
     "media-typer": "^1.1.0",
     "sharp": "^0.24.1",
     "xml-js": "^1.6.11"
