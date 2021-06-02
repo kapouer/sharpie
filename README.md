@@ -7,29 +7,28 @@ When format parameter is not set and content negotiation allows it,
 jpeg, png, and tiff images are converted to webp images, and Vary:Accept is set
 on the response headers.
 
-
 Usage
 -----
 
-```
+```js
 var express = require('express');
 var app = express();
 var sharpie = require('sharpie')({
-	param: 'url',
-	q: 90,
-	rs: "w:320,h:240,max",
-	format: 'jpeg',
-	bg: 'white',
-	crop: 'center',
-	flatten: true,
-	hostnames: false,
-	ratio: 'minXMinY',
-	sizes: '64,32,16',      // these two options for ico output format support
-	im: '/usr/bin/convert', // since version 3.4.0
-	signs: {
-		assignment: ':', // use ~ for better uri-encoding
-		separator: ','  // use ! for better uri-encoding
-	}
+ param: 'url',
+ q: 90,
+ rs: "w:320,h:240,max",
+ format: 'jpeg',
+ bg: 'white',
+ crop: 'center',
+ flatten: true,
+ hostnames: false,
+ ratio: 'minXMinY',
+ sizes: '64,32,16',      // these two options for ico output format support
+ im: '/usr/bin/convert', // since version 3.4.0
+ signs: {
+  assignment: ':', // use ~ for better uri-encoding
+  separator: ','  // use ! for better uri-encoding
+ }
 });
 
 // will get the url through req.params[opts.param] – e.g /param/foo.jpg
@@ -44,41 +43,41 @@ It supports a limited subset of [sharp options](http://sharp.dimens.io)
 that can be given as parameters or as defaults when initializing
 the middleware:
 
-* format  
-  the destination format (jpeg, png, webp, raw, svg, ...)  
+* format
+  the destination format (jpeg, png, webp, raw, svg, ...)
   defaults to format of the original image, or webp if negotiable, (since
-  version 4), or jpeg.  
+  version 4), or jpeg.
   since 3.4.0, sharpie.formats contains runtime information about supported formats.
-* q  
+* q
   quality, default 90
-* rs  
-  w:452,h=123,min  
-  w:452,h=123,max  
-  w:452,enlarge  
+* rs
+  w:452,h=123,min
+  w:452,h=123,max
+  w:452,enlarge
   z:55,enlarge
-* bg  
-  the background color for flatten and resize  
+* bg
+  the background color for flatten and resize
   defaults to no background color
-* fg  
-  fill color for svg (simpler than using style)  
-* crop  
+* fg
+  fill color for svg (simpler than using style)
+* crop
   center, north, northeast, ...
-* flatten  
+* flatten
   boolean
-* style  
-  new in version 2.3  
+* style
+  new in version 2.3
   appends a style tag with that content to the svg root
-* ratio  
-  new in version 2.4  
-  sets preserveAspectRatio attribute, and if viewBox is missing, add it  
+* ratio
+  new in version 2.4
+  sets preserveAspectRatio attribute, and if viewBox is missing, add it
   (provided width and height attributes, and optionally x, y, are present).
-* ex  
-  new in version 2.5  
+* ex
+  new in version 2.5
   extracts a region of the image, given center x, y, width and height in % of the
   image. This means `ex=x:50,y:50,w:100,h:100` extracts the full image.
-* mean  
-  new in version 3.5  
-  the image has all pixels color set to the image average color.  
+* mean
+  new in version 3.5
+  the image has all pixels color set to the image average color.
   While this is not the "dominant" color, it can be useful as a placeholder.
 
 Since version 1.4 svg support has been dropped and replaced by passing svg
@@ -94,34 +93,37 @@ Content-Type is set by sharpie middleware in the HTTP response header.
 
 Since version 2.0 it is possible to pass a `hostnames` option to be able to whitelist
 hostnames that sharpie can proxy. This option can be
-- `function(hostname) -> boolean`
-- `hostnames[hostname] -> boolean`
-- an array of whitelisted hostnames
-- `true` allowing all hostnames, or `false` rejecting all hostnames except current Host.
+
+* `function(hostname) -> boolean`
+* `hostnames[hostname] -> boolean`
+* an array of whitelisted hostnames
+* `true` allowing all hostnames, or `false` rejecting all hostnames except current Host.
 
 Since version 2.0 responses with statusCode >= 400
 [pass control to next middleware](https://github.com/kapouer/sharpie/pull/4):
-- next() when 404
-- or next(err) with err.status = res.statusCode
+
+* next() when 404
+* or next(err) with err.status = res.statusCode
 
 Since version 3.4 it is possible to use imagemagick to convert to ico file format:
-* im  
+
+* im
   path to im's convert executable. None is set by default.
-* sizes  
-  the sizes of the favicon in ico format, separated by a comma.  
+* sizes
+  the sizes of the favicon in ico format, separated by a comma.
   defaults to 64,32,16.
-* bg  
+* bg
   the background color
 
 Since version 4, default optimizations options are set:
-- jpeg: trellisQuantisation, overshootDeringing, and if image is > 10kb,
+
+* jpeg: trellisQuantisation, overshootDeringing, and if image is > 10kb,
 optimizeScans
-- png: palette
-- webp: nearLossless when converting from png
+* png: palette
+* webp: nearLossless when converting from png
 
 This module does not offer any kind of cache, and will stay as simple as
 possible.
 
 Since version 4.1, when content-type is not an image, a warning is logged
 and the data is just passed on.
-
