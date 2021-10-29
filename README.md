@@ -14,9 +14,9 @@ Usage
 -----
 
 ```js
-var express = require('express');
-var app = express();
-var sharpie = require('sharpie')({
+const express = require('express');
+const app = express();
+const sharpie = require('sharpie')({
  param: 'url',
  q: 90,
  rs: "w:320,h:240,max",
