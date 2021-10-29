@@ -34,9 +34,22 @@
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
+    "@kapouer/eslint-config": "^1.6.1",
     "compression": "^1.7.4",
     "express": "latest",
     "mocha": "latest",
     "should": "latest"
+  },
+  "eslintConfig": {
+    "extends": "@kapouer/eslint-config",
+    "overrides": [{
+      "files": [
+        "test/*.js"
+      ],
+      "env": {
+        "mocha": true
+      }
+    }]
   }
 }
+
