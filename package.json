@@ -1,6 +1,6 @@
 {
   "name": "sharpie",
-  "version": "4.5.3",
+  "version": "4.6.0",
   "description": "A simple express middleware for resizing images using sharp and pipes",
   "scripts": {
     "test": "mocha"
@@ -44,14 +44,15 @@
   },
   "eslintConfig": {
     "extends": "@kapouer/eslint-config",
-    "overrides": [{
-      "files": [
-        "test/*.js"
-      ],
-      "env": {
-        "mocha": true
+    "overrides": [
+      {
+        "files": [
+          "test/*.js"
+        ],
+        "env": {
+          "mocha": true
+        }
       }
-    }]
+    ]
   }
 }
-
