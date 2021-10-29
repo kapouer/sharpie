@@ -7,6 +7,9 @@ When format parameter is not set and content negotiation allows it,
 jpeg, png, and tiff images are converted to webp images, and Vary:Accept is set
 on the response headers.
 
+sharpie (>= 4.6.0) needs sharp at any version compatible with your system,
+and as such sharp is listed as a peer dependency.
+
 Usage
 -----
 
