@@ -26,7 +26,7 @@ var sharpie = require('sharpie')({
  flatten: true,
  hostnames: false,
  ratio: 'minXMinY',
- sizes: '64,32,16',      // these two options for ico output format support
+ sizes: '16,32,48',      // these two options for ico output format support
  im: '/usr/bin/convert', // since version 3.4.0
  signs: {
   assignment: ':', // use ~ for better uri-encoding
