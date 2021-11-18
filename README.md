@@ -20,7 +20,7 @@ const sharpie = require('sharpie')({
  param: 'url',
  q: 90,
  rs: "w:320,h:240,max",
- format: 'jpeg',
+ format: false, // negotiate format
  bg: 'white',
  crop: 'center',
  flatten: true,
@@ -47,9 +47,13 @@ that can be given as parameters or as defaults when initializing
 the middleware:
 
 * format
-  the destination format (jpeg, png, webp, avif, raw, svg, ...)
-  defaults to format of the original image, or webp, avif (version 4.7), if negotiable, or jpeg.
-  since 3.4.0, sharpie.formats contains runtime information about supported formats.
+  force destination format (jpeg, png, webp, avif, raw, svg, ...)
+  If false, defaults to format of the original image,
+  or negotiate best format (version 4.7).
+* formats
+  list of allowed formats for negotiation.
+  Default to ['svg', 'png', 'jpeg', 'webp']
+  To test avif encoding, pass formats: ['svg', 'png', 'jpeg', 'webp', 'avif'].
 * q
   quality, renormalized, default 80
 * rs
