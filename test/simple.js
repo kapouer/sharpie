@@ -81,7 +81,7 @@ describe("Sharpie middleware", () => {
 			responseType: 'buffer'
 		}).then((res) => {
 			should(res.statusCode).equal(200);
-			should(res.body.length).lessThan(635);
+			should(res.body.length).lessThan(890);
 			should(res.headers['content-type']).equal('image/jpeg');
 			return sharp(res.body).metadata().then((meta) => {
 				should(meta.width).equal(50);
@@ -344,7 +344,7 @@ describe("Sharpie middleware", () => {
 			responseType: 'buffer'
 		}).then((res) => {
 			should(res.statusCode).equal(200);
-			should(res.body.length).lessThan(417);
+			should(res.body.length).lessThan(669);
 			should(res.headers['content-type']).equal('image/jpeg');
 			return sharp(res.body).metadata().then((meta) => {
 				should(meta.width).equal(25);
@@ -369,7 +369,7 @@ describe("Sharpie middleware", () => {
 			responseType: 'buffer'
 		}).then((res) => {
 			should(res.statusCode).equal(200);
-			should(res.body.length).lessThan(430);
+			should(res.body.length).lessThan(690);
 			should(res.headers['content-type']).equal('image/jpeg');
 			return sharp(res.body).metadata().then((meta) => {
 				should(meta.width).equal(30);
@@ -459,7 +459,7 @@ describe("Sharpie middleware", () => {
 			responseType: 'buffer'
 		}).then((res) => {
 			should(res.statusCode).equal(200);
-			should(res.body.length).lessThan(840);
+			should(res.body.length).lessThan(1050);
 			should(res.headers['content-type']).equal('image/jpeg');
 			return sharp(res.body).metadata().then((meta) => {
 				should(meta.width).equal(50);
