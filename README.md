@@ -4,8 +4,8 @@ sharpie
 A simple express middleware for resizing images using sharp and pipes.
 
 When format parameter is not set and content negotiation allows it,
-jpeg, png, and tiff images are converted to webp images, and Vary:Accept is set
-on the response headers.
+jpeg, png, and tiff images are converted to webp or avif images,
+and Vary:Accept is set on the response headers.
 
 sharpie (>= 4.6.0) needs sharp at any version compatible with your system,
 and as such sharp is listed as a peer dependency.
@@ -47,12 +47,11 @@ that can be given as parameters or as defaults when initializing
 the middleware:
 
 * format
-  the destination format (jpeg, png, webp, raw, svg, ...)
-  defaults to format of the original image, or webp if negotiable, (since
-  version 4), or jpeg.
+  the destination format (jpeg, png, webp, avif, raw, svg, ...)
+  defaults to format of the original image, or webp, avif (version 4.7), if negotiable, or jpeg.
   since 3.4.0, sharpie.formats contains runtime information about supported formats.
 * q
-  quality, default 90
+  quality, renormalized, default 80
 * rs
   w:452,h=123,min
   w:452,h=123,max
@@ -124,6 +123,7 @@ Since version 4, default optimizations options are set:
 optimizeScans
 * png: palette
 * webp: nearLossless when converting from png
+* avif: lossless when converting from png
 
 This module does not offer any kind of cache, and will stay as simple as
 possible.

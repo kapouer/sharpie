@@ -33,7 +33,7 @@
     "xml-js": "^1.6.11"
   },
   "peerDependencies": {
-    "sharp": "*"
+    "sharp": "^0.28.3"
   },
   "devDependencies": {
     "@kapouer/eslint-config": "^1.6.1",

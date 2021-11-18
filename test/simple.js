@@ -204,6 +204,32 @@ describe("Sharpie middleware", () => {
 		});
 	});
 
+	it("should convert jpeg to avif", () => {
+		app.get('/images/*', (req, res, next) => {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				req.url = req.path.substring('/images'.length);
+				next();
+			}
+		}, express.static(__dirname + '/images'));
+
+		return got('http://localhost:' + port + '/images/image.jpg', {
+			headers: {
+				Accept: "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+			},
+			responseType: 'buffer'
+		}).then((res) => {
+			should(res.statusCode).equal(200);
+			// should(res.body.length).lessThan(635);
+			should(res.headers['content-type']).equal('image/avif');
+			return sharp(res.body).metadata().then((meta) => {
+				should(meta.format).equal('heif');
+			});
+		});
+	});
+
 	it("should not convert jpeg to webp", () => {
 		app.get('/images/*', (req, res, next) => {
 			if (req.query.raw === undefined) {
