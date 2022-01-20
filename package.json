@@ -27,7 +27,7 @@
   "dependencies": {
     "color-string": "^1.6.0",
     "content-type": "^1.0.4",
-    "debug": "^4.3.2",
+    "debug": "^4.3.3",
     "got": "^11.8.3",
     "media-typer": "^1.1.0",
     "xml-js": "^1.6.11"
@@ -36,7 +36,7 @@
     "sharp": "^0.28.3"
   },
   "devDependencies": {
-    "@kapouer/eslint-config": "^1.6.1",
+    "@kapouer/eslint-config": "^1.6.2",
     "compression": "^1.7.4",
     "express": "latest",
     "mocha": "latest",

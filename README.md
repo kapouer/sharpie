@@ -31,7 +31,8 @@ const sharpie = require('sharpie')({
  signs: {
   assignment: ':', // use ~ for better uri-encoding
   separator: ','  // use ! for better uri-encoding
- }
+ },
+ rejectUnauthorized: false
 });
 
 // will get the url through req.params[opts.param] – e.g /param/foo.jpg
