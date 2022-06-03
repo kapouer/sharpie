@@ -25,15 +25,15 @@
     "url": "https://github.com/kapouer/sharpie/issues"
   },
   "dependencies": {
-    "color-string": "^1.6.0",
+    "color-string": "^1.9.1",
     "content-type": "^1.0.4",
-    "debug": "^4.3.3",
+    "debug": "^4.3.4",
     "got": "^11.8.3",
     "media-typer": "^1.1.0",
     "xml-js": "^1.6.11"
   },
   "peerDependencies": {
-    "sharp": "^0.28.3"
+    "sharp": "^0.30.6"
   },
   "devDependencies": {
     "@kapouer/eslint-config": "^1.6.2",
