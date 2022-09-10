@@ -29,6 +29,7 @@
     "content-type": "^1.0.4",
     "debug": "^4.3.4",
     "got": "^11.8.3",
+    "ico-endec": "^0.1.6",
     "media-typer": "^1.1.0",
     "xml-js": "^1.6.11"
   },

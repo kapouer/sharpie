@@ -26,8 +26,7 @@ const sharpie = require('sharpie')({
  flatten: true,
  hostnames: false,
  ratio: 'minXMinY',
- sizes: '16,32,48',      // these two options for ico output format support
- im: '/usr/bin/convert', // since version 3.4.0
+ sizes: '16,32,48', // sizes for ico format
  signs: {
   assignment: ':', // use ~ for better uri-encoding
   separator: ','  // use ! for better uri-encoding
@@ -114,10 +113,8 @@ Since version 2.0 responses with statusCode >= 400
 * next() when 404
 * or next(err) with err.status = res.statusCode
 
-Since version 3.4 it is possible to use imagemagick to convert to ico file format:
+Since version 4.10 it is possible to output ico file format:
 
-* im
-  path to im's convert executable. None is set by default.
 * sizes
   the sizes of the favicon in ico format, separated by a comma.
   defaults to 64,32,16.

@@ -426,9 +426,7 @@ describe("Sharpie middleware", () => {
 		app.get('/images/*', (req, res, next) => {
 			if (req.query.raw === undefined) {
 				req.params.url = req.path + '?raw';
-				sharpie({
-					im: '/usr/bin/convert'
-				})(req, res, next);
+				sharpie()(req, res, next);
 			} else {
 				req.url = req.path.substring('/images'.length);
 				next();
@@ -440,7 +438,7 @@ describe("Sharpie middleware", () => {
 		}).then((res) => {
 			should(res.statusCode).equal(200);
 			should(res.headers['content-type']).equal('image/x-icon');
-			should(res.body.length).equal(15086);
+			should(res.body.length).equal(2507);
 		});
 	});
 
