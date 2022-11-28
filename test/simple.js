@@ -438,7 +438,7 @@ describe("Sharpie middleware", () => {
 		}).then((res) => {
 			should(res.statusCode).equal(200);
 			should(res.headers['content-type']).equal('image/x-icon');
-			should(res.body.length).equal(2507);
+			should(res.body.length).equal(2407);
 		});
 	});
 
