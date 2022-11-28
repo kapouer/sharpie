@@ -70,7 +70,10 @@ describe("Sharpie middleware", () => {
 		app.get('/images/*', (req, res, next) => {
 			if (req.query.raw === undefined) {
 				req.params.url = req.path + '?raw';
-				sharpie()(req, res, next);
+				sharpie()(req, res, (err => {
+					console.error(err);
+					next(err);
+				}));
 			} else {
 				req.url = req.path.substring('/images'.length);
 				next();
