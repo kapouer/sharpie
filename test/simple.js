@@ -517,7 +517,7 @@ describe("Sharpie middleware", () => {
 				if (hostname == 'www.gravatar.com') return true;
 				else return false;
 			}
-		}));
+		}), errHandler);
 
 		return got('http://localhost:' + port, {
 			searchParams: { url: "http://www.gravatar.com/avatar/0.jpg" }
