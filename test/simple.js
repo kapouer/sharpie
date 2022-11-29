@@ -1,10 +1,11 @@
 import should from 'should';
 import express from 'express';
-import got from 'got';
+import { default as Got } from 'got';
 import sharp from 'sharp';
 import compression from 'compression';
 import sharpie from 'sharpie';
 
+const got = Got.extend({ retry: 0 });
 const testDir = new URL(".", import.meta.url).pathname;
 
 function errHandler(err, req, res, next) {
