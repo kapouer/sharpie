@@ -1,9 +1,15 @@
-const should = require('should');
-const express = require('express');
-const got = require('got').extend({retry: 0});
-const sharp = require('sharp');
+import should from 'should';
+import express from 'express';
+import got from 'got';
+import sharp from 'sharp';
+import compression from 'compression';
+import sharpie from 'sharpie';
 
-const sharpie = require('../');
+const testDir = new URL(".", import.meta.url).pathname;
+
+function errHandler(err, req, res, next) {
+	res.type('text').status(err.statusCode ?? 500).end(err.message);
+}
 
 describe("Sharpie middleware", () => {
 	let app, server, port;
@@ -22,10 +28,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.ico').then((res) => {
 			should(res.statusCode).equal(200);
@@ -38,10 +43,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/wrong.svg').then((res) => {
 			should(res.statusCode).equal(200);
@@ -55,10 +59,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/empty.svg').then((res) => {
 			should(res.statusCode).equal(200);
@@ -75,10 +78,9 @@ describe("Sharpie middleware", () => {
 					next(err);
 				}));
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.jpg?rs=w:50&q=75', {
 			responseType: 'buffer'
@@ -94,6 +96,42 @@ describe("Sharpie middleware", () => {
 		});
 	});
 
+	it("should resize a jpeg image using file stream", () => {
+		app.get('/images/*', sharpie({
+			param(req) {
+				return './test' + req.path;
+			}
+		}), errHandler);
+
+		return got('http://localhost:' + port + '/images/image.jpg?rs=w:50&q=75', {
+			responseType: 'buffer'
+		}).then((res) => {
+			should(res.statusCode).equal(200);
+			should(res.headers['content-type']).equal('image/jpeg');
+			should(res.body.length).lessThan(890);
+			return sharp(res.body).metadata().then((meta) => {
+				should(meta.width).equal(50);
+				should(meta.height).equal(50);
+				should(meta.format).equal('jpeg');
+			});
+		});
+	});
+
+	it("should fail on a jpeg image using file stream", async () => {
+		app.get('/images/*', sharpie({
+			param(req) {
+				return './test' + req.path;
+			}
+		}), errHandler);
+
+		try {
+			await got('http://localhost:' + port + '/images/imagenot.jpg?rs=w:50&q=75', {
+				responseType: 'buffer'
+			});
+		} catch (err) {
+			should(err.response.statusCode).equal(404);
+		}
+	});
 
 	it("should fail to resize a jpeg image because rs is bad", () => {
 		app.get('/images/*', (req, res, next) => {
@@ -101,10 +139,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.jpg?rs=w:aa&q=75', {
 			responseType: 'buffer'
@@ -122,10 +159,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.jpg?rs=w:20&bg=33F', {
 			responseType: 'buffer'
@@ -143,10 +179,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.png?flatten=1&bg=33F', {
 			responseType: 'buffer'
@@ -165,10 +200,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.jpg?q=SELECT', {
 			responseType: 'buffer'
@@ -187,10 +221,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.jpg', {
 			headers: {
@@ -213,10 +246,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie({formats: ['jpeg', 'webp', 'avif']})(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.jpg', {
 			headers: {
@@ -239,10 +271,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.jpg', {
 			headers: {
@@ -265,10 +296,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.webp', {
 			headers: {},
@@ -289,10 +319,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image-alpha.webp', {
 			headers: {},
@@ -314,10 +343,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.jpg?rs=w:0,h:10&q=75', {
 			responseType: 'buffer'
@@ -338,10 +366,9 @@ describe("Sharpie middleware", () => {
 					}
 				})(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.jpg?rs=w~50!z~50&q=75', {
 			responseType: 'buffer'
@@ -363,10 +390,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.jpg?rs=z:30&q=75', {
 			responseType: 'buffer'
@@ -388,10 +414,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.png?ex=x:50,y:50,w:80,h:1&rs=z:1&q=75', {
 			responseType: 'buffer'
@@ -407,10 +432,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/pb.svg?format=png&rs=z:25', {
 			responseType: 'buffer'
@@ -431,10 +455,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/pb.svg?format=ico', {
 			responseType: 'buffer'
@@ -451,10 +474,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.jpg?ex=x:50,y:50,w:50,h:100', {
 			responseType: 'buffer'
@@ -476,14 +498,13 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.jpg?ex=x:50,y:50,w:0,h:100', {
 			responseType: 'buffer'
-		}).catch((res) => {
+		}).catch ((res) => {
 			should(res.response.statusCode).equal(400);
 			should(res.response.headers['content-type']).equal('text/plain; charset=utf-8');
 		});
@@ -518,10 +539,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image-unboxed.svg', {searchParams:{
 			style: '*{fill:red;}'
@@ -540,10 +560,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image-boxed.svg', {searchParams:{
 			ratio: 'xMaxYMid'
@@ -559,10 +578,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.svg').then((res) => {
 			should(res.statusCode).equal(200);
@@ -576,10 +594,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.svg?rs=w:50,min').then((res) => {
 			should(res.statusCode).equal(200);
@@ -588,7 +605,6 @@ describe("Sharpie middleware", () => {
 	});
 
 	it("should support gzipped svg", () => {
-		const compression = require('compression');
 		let called = false;
 		app.use(compression({
 			threshold: '0kb',
@@ -602,10 +618,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.svg?rs=w:50,min').then((res) => {
 			should(called).equal(true);
@@ -621,10 +636,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.svg?ex=x:50,y:50,w:50,h:100').then((res) => {
 			should(res.statusCode).equal(200);
@@ -638,10 +652,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/image.svg?rs=z:50').then((res) => {
 			should(res.statusCode).equal(200);
@@ -669,7 +682,7 @@ describe("Sharpie middleware", () => {
 		});
 	});
 
-	it("should pass errors gracefully", () => {
+	it("should pass errors gracefully", async function () {
 		app.get('/fail.jpg', (req, res, next) => {
 			res.status(500);
 			res.send('Fake server error');
@@ -679,14 +692,13 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
-		return got('http://localhost:' + port + '/images/image404.jpg?rs=w:50&q=75').catch((err) => {
+		return got('http://localhost:' + port + '/images/image404.jpg?rs=w:50&q=75').catch(err => {
 			return err;
-		}).then((res) => {
+		}).then(res => {
 			should(res.response.statusCode).equal(404);
 			return got('http://localhost:' + port + '/images/image500.jpg?rs=w:50&q=75');
 		}).catch((err) => {
@@ -710,10 +722,9 @@ describe("Sharpie middleware", () => {
 				req.params.url = req.path + '?raw';
 				sharpie()(req, res, next);
 			} else {
-				req.url = req.path.substring('/images'.length);
 				next();
 			}
-		}, express.static(__dirname + '/images'));
+		}, express.static(testDir), errHandler);
 
 		return got('http://localhost:' + port + '/images/color.jpg?mean&format=png', {
 			responseType: 'buffer'

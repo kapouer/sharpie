@@ -7,17 +7,16 @@ When format parameter is not set and content negotiation allows it,
 jpeg, png, and tiff images are converted to webp or avif images,
 and Vary:Accept is set on the response headers.
 
-sharpie (>= 4.6.0) needs sharp at any version compatible with your system,
-and as such sharp is listed as a peer dependency.
-
 Usage
 -----
 
 ```js
-const express = require('express');
+import express from 'express';
+import Sharpie from 'sharpie';
+
 const app = express();
-const sharpie = require('sharpie')({
- param: 'url',
+const sharpie = Sharpie({
+ param: 'url', // or an async function that returns a file path
  q: 90,
  rs: "w:320,h:240,max",
  format: false, // negotiate format
