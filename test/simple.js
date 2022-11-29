@@ -1,9 +1,8 @@
 import should from 'should';
 import express from 'express';
 import { default as Got } from 'got';
-import sharp from 'sharp';
 import compression from 'compression';
-import sharpie from 'sharpie';
+import { sharpie, sharp } from 'sharpie';
 
 const got = Got.extend({ retry: 0 });
 const testDir = new URL(".", import.meta.url).pathname;
@@ -683,7 +682,7 @@ describe("Sharpie middleware", () => {
 		});
 	});
 
-	it("should pass errors gracefully", async function () {
+	it("should pass errors gracefully", async () => {
 		app.get('/fail.jpg', (req, res, next) => {
 			res.status(500);
 			res.send('Fake server error');

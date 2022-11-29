@@ -10,10 +10,10 @@ Usage
 
 ```js
 import express from 'express';
-import Sharpie from 'sharpie';
+import { sharpie as createSharpie } from 'sharpie';
 
 const app = express();
-const sharpie = Sharpie({
+const sharpie = createSharpie({
  param: 'url', // or an async function(req) that returns a file path
  q: 90,
  rs: "w:320,h:240,max",
@@ -112,6 +112,13 @@ optimizeScans
 
 Unrecognized types are proxied *as is* with a warning.
 (Future versions might change that behavior).
+
+sharp
+-----
+
+```js
+import { sharp } from 'sharpie';
+```
 
 Errors
 ------
