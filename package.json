@@ -1,6 +1,6 @@
 {
   "name": "sharpie",
-  "version": "4.10.0",
+  "version": "5.0.0",
   "description": "Express middleware for image transforms with sharp",
   "scripts": {
     "test": "mocha"
