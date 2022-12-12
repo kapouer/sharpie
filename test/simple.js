@@ -8,6 +8,7 @@ const got = Got.extend({ retry: 0 });
 const testDir = new URL(".", import.meta.url).pathname;
 
 function errHandler(err, req, res, next) {
+	console.error(err);
 	res.type('text').status(err.statusCode ?? 500).end(err.message);
 }
 
