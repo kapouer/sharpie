@@ -45,7 +45,6 @@
     "@kapouer/eslint-config": "latest",
     "compression": "^1.7.4",
     "express": "latest",
-    "got": "11.x",
     "mocha": "latest",
     "should": "latest"
   },
