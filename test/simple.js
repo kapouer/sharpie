@@ -605,7 +605,7 @@ describe("Sharpie middleware", () => {
 		should(res.status).equal(404);
 		res = await fetch('http://localhost:' + port + '/images/image500.jpg?rs=w:50&q=75');
 		should(res.status).equal(500);
-		res = await fetch('http://localhost:' + port + '/fail.jpg?rs=w:50&q=75')
+		res = await fetch('http://localhost:' + port + '/fail.jpg?rs=w:50&q=75');
 		should(res.status).equal(500);
 	});
 
