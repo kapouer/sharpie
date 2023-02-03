@@ -33,12 +33,12 @@
   "dependencies": {
     "class-deferred": "^1.0.1",
     "color-string": "^1.9.1",
-    "content-type": "^1.0.4",
+    "content-type": "^1.0.5",
     "debug": "^4.3.4",
     "http-errors": "^2.0.0",
     "ico-endec": "^0.1.6",
     "media-typer": "^1.1.0",
-    "sharp": "^0.31.2",
+    "sharp": "^0.31.3",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
