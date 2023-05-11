@@ -399,6 +399,20 @@ describe("Sharpie middleware", () => {
 		should(buf.byteLength).lessThan(2408);
 	});
 
+	it("should fail to convert missing image to a favicon", async () => {
+		app.get('/images/*', (req, res, next) => {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				next();
+			}
+		}, express.static(testDir), errHandler);
+
+		const res = await fetch('http://localhost:' + port + '/images/bluk.png?format=ico');
+		should(res.status).equal(404);
+	});
+
 	it("should extract a jpeg image", async () => {
 		app.get('/images/*', (req, res, next) => {
 			if (req.query.raw === undefined) {
