@@ -449,6 +449,21 @@ describe("Sharpie middleware", () => {
 		should(res.headers.get('content-type')).equal('text/plain; charset=utf-8');
 	});
 
+	it("should extract a jpeg image and return 200 even if extract if somewhat out of bounds", async () => {
+		app.get('/images/*', (req, res, next) => {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				next();
+			}
+		}, express.static(testDir), errHandler);
+
+		const res = await fetch('http://localhost:' + port + '/images/badextract.jpg?ex=x:50,y:68.381,w:100,h:63.239&rs=z:25');
+		should(res.status).equal(200);
+		should(res.headers.get('content-type')).equal('image/jpeg');
+	});
+
 	it("should not allow blacklisted domain", async () => {
 		app.get('/', sharpie({
 			hostnames: function(hostname) {
