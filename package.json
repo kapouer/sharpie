@@ -37,7 +37,7 @@
     "http-errors": "^2.0.0",
     "ico-endec": "^0.1.6",
     "media-typer": "^1.1.0",
-    "sharp": "^0.32.1",
+    "sharp": "^0.32.6",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
