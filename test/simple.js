@@ -466,18 +466,18 @@ describe("Sharpie middleware", () => {
 
 	it("should not allow blacklisted domain", async () => {
 		app.get('/', sharpie({
-			hostnames: function(hostname) {
+			hostnames: function (hostname) {
 				if (hostname == 'www.gravatar.com') return true;
 				else return false;
 			}
 		}), errHandler);
 
-		const res = await fetch(`http://localhost:${port}/?${new URLSearchParams({ url: "http://www.gravatar.com/avatar/0.jpg"})}`);
+		const res = await fetch(`http://localhost:${port}/?${new URLSearchParams({ url: "https://www.gravatar.com/avatar/0.jpg" })}`);
 		should(res.status).equal(200);
 		should(res.headers.get('content-type')).equal('image/jpeg');
 		const res2 = await fetch(`http://localhost:${port}/?${new URLSearchParams({ url: "https://avatars0.githubusercontent.com/u/0" })}`);
 		should(res2.status).equal(403);
-	});
+	}).timeout(5000);
 
 	it("should append style tag to svg root element", async () => {
 		app.get('/images/*', (req, res, next) => {
