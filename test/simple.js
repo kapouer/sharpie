@@ -91,7 +91,8 @@ describe("Sharpie middleware", () => {
 
 	it("should resize a jpeg image using file stream", async () => {
 		app.get('/images/*', sharpie({
-			param(req) {
+			param(req, params) {
+				should(params.rs).deepEqual({ w: 50 });
 				return './test' + req.path;
 			}
 		}), errHandler);
