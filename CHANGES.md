@@ -7,3 +7,7 @@
 - throw HttpError
 - get rid of got for runtime
 - use imports
+
+## 5.3.0
+
+Add params to `opts.param(req, params)` signature.
