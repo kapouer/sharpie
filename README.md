@@ -44,7 +44,7 @@ app.listen();
 Query Options
 -------------
 
-It supports a limited subset of [sharp options](http://sharp.dimens.io) that can be given as parameters or as defaults when initializing the middleware:
+It supports a limited subset of [sharp options](https://sharp.pixelplumbing.com/) that can be given as parameters or as defaults when initializing the middleware:
 
 * format
   force destination format (jpeg, png, webp, avif, raw, svg, ...)
