@@ -33,7 +33,7 @@
   "dependencies": {
     "color-string": "^1.9.1",
     "content-type": "^1.0.5",
-    "debug": "^4.3.4",
+    "debug": "^4.3.7",
     "http-errors": "^2.0.0",
     "ico-endec": "^0.1.6",
     "media-typer": "^1.1.0",
@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@kapouer/eslint-config": "latest",
-    "compression": "^1.7.4",
+    "compression": "^1.7.5",
     "express": "latest",
     "mocha": "latest",
     "should": "latest"
