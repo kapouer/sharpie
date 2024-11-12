@@ -1,6 +1,7 @@
 import should from 'should';
 import express from 'express';
 import compression from 'compression';
+import Path from 'node:path';
 import { sharpie, sharp } from 'sharpie';
 
 const testDir = new URL(".", import.meta.url).pathname;
@@ -637,6 +638,8 @@ describe("Sharpie middleware", () => {
 		should(res.status).equal(500);
 		res = await fetch('http://localhost:' + port + '/fail.jpg?rs=w:50&q=75');
 		should(res.status).equal(500);
+		res = await fetch('http://localhost:' + port + '/images/image404.svg?rs=w:50');
+		should(res.status).equal(404);
 	});
 
 	it("should get color of a jpeg image", async () => {
@@ -657,6 +660,35 @@ describe("Sharpie middleware", () => {
 		should(meta.width).equal(1232);
 		should(meta.height).equal(816);
 		should(meta.format).equal('png');
+	});
+
+	it("should get image file path from param", async () => {
+		app.get('/images/*', sharpie({
+			async param(req) {
+				return Path.join(testDir, req.path);
+			}
+		}), errHandler);
+
+		const res = await fetch('http://localhost:' + port + '/images/color.jpg?mean&format=png');
+		should(res.status).equal(200);
+		should(res.headers.get('content-type')).equal('image/png');
+	});
+
+	it("should fail to get image file path from param", async () => {
+		app.get('/images/*', sharpie({
+			async param(req) {
+				if (req.path == "/images/fail.jpg") throw new Error("test");
+				return Path.join(testDir, req.path);
+			}
+		}), errHandler);
+		let res = await fetch('http://localhost:' + port + '/images/image404.jpg?rs=w:50&q=75');
+		should(res.status).equal(404);
+		res = await fetch('http://localhost:' + port + '/images/image500.jpg?rs=w:50&q=75');
+		should(res.status).equal(500);
+		res = await fetch('http://localhost:' + port + '/images/fail.jpg?rs=w:50&q=75');
+		should(res.status).equal(500);
+		res = await fetch('http://localhost:' + port + '/images/image404.svg?rs=w:50');
+		should(res.status).equal(404);
 	});
 });
 
