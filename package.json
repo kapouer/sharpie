@@ -1,6 +1,6 @@
 {
   "name": "sharpie",
-  "version": "5.4.1",
+  "version": "5.5.0",
   "description": "Express middleware for image transforms with sharp",
   "scripts": {
     "test": "mocha"
@@ -31,18 +31,18 @@
     "url": "https://github.com/kapouer/sharpie/issues"
   },
   "dependencies": {
-    "color-string": "^1.9.1",
+    "color-string": "^2.0.0",
     "content-type": "^1.0.5",
-    "debug": "^4.3.7",
+    "debug": "^4.4.0",
     "http-errors": "^2.0.0",
     "ico-endec": "^0.1.6",
     "media-typer": "^1.1.0",
-    "sharp": "^0.32.6",
+    "sharp": "^0.33.5",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@kapouer/eslint-config": "latest",
-    "compression": "^1.7.5",
+    "compression": "^1.8.0",
     "express": "latest",
     "mocha": "latest",
     "should": "latest"
