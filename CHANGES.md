@@ -1,5 +1,19 @@
 # Changes
 
+## 5.6.0
+
+- sharp@0.34.1
+- Bump deps
+- refactor resize helper, improve exception error message
+- test resize + extract behavior
+- drop should
+- support pnpm.onlyBuiltDependencies
+
+## 5.5.0
+
+- Bump deps
+- try to fix an issue with streams (use pipe instead of pipeline)
+
 ## 5.4.0
 
 - favicon contains only 48px image
