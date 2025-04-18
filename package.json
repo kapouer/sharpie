@@ -47,8 +47,7 @@
     "@kapouer/eslint-config": "latest",
     "compression": "^1.8.0",
     "express": "latest",
-    "mocha": "latest",
-    "should": "latest"
+    "mocha": "latest"
   },
   "eslintConfig": {
     "extends": "@kapouer/eslint-config",
