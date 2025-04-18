@@ -5,7 +5,8 @@ import assert from 'node:assert/strict';
 import { sharpie, sharp } from 'sharpie';
 
 assert.includes ??= (a, b) => assert.ok(a.includes(b));
-assert.lessThan ??= (a, b) => assert.ok(a <= b);
+assert.lessThan ??= (a, b) => assert.ok(a < b);
+assert.greaterThan ??= (a, b) => assert.ok(a > b);
 
 const testDir = new URL(".", import.meta.url).pathname;
 
@@ -436,6 +437,32 @@ describe("Sharpie middleware", () => {
 		const meta = await sharp(Buffer.from(buf)).metadata();
 		assert.equal(meta.width, 50);
 		assert.equal(meta.height, 100);
+		assert.equal(meta.format, 'jpeg');
+	});
+
+	it("should extract then resize a jpeg image", async () => {
+		app.get('/images/*', (req, res, next) => {
+			if (req.query.raw === undefined) {
+				req.params.url = req.path + '?raw';
+				sharpie()(req, res, next);
+			} else {
+				next();
+			}
+		}, express.static(testDir), errHandler);
+
+		const initialMeta = await sharp(Path.join(testDir, 'images/color.jpg')).metadata();
+		assert.equal(initialMeta.width, 1232);
+		assert.equal(initialMeta.height, 816);
+
+		const res = await fetch('http://localhost:' + port + '/images/color.jpg?ex=x:35,y:35,w:25,h:25&rs=w:308');
+		assert.equal(res.status, 200);
+		assert.equal(res.headers.get('content-type'), 'image/jpeg');
+		const buf = await res.arrayBuffer();
+		const meta = await sharp(Buffer.from(buf)).metadata();
+		assert.lessThan(meta.size, 21000);
+		assert.greaterThan(meta.size, 20000);
+		assert.equal(meta.width, 308);
+		assert.equal(meta.height, 204);
 		assert.equal(meta.format, 'jpeg');
 	});
 
