@@ -30,6 +30,9 @@
   "bugs": {
     "url": "https://github.com/kapouer/sharpie/issues"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": ["sharp"]
+  },
   "dependencies": {
     "color-string": "^2.0.1",
     "content-type": "^1.0.5",
